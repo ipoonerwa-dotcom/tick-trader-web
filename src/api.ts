@@ -4,6 +4,7 @@ import { API_BASE } from "./config";
 export interface Summary {
   mode: "paper" | "live";
   delayMin?: number;
+  signalMinTokens?: number | null;
   startedAt: number;
   capitalUsd: number;
   equityUsd: number;

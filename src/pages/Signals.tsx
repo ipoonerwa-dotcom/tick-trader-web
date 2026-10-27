@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createWalletClient, custom, getAddress } from "viem";
 import { bsc } from "viem/chains";
 import { useI18n } from "../i18n";
-import type { Order, Signals as SignalsData } from "../api";
+import { usePoll, type Order, type Signals as SignalsData, type Summary } from "../api";
 import { Panel, Sym, reason } from "../components/common";
 import { ago, clock, signedUsd, tone, usd } from "../format";
 import { API_BASE, LINKS } from "../config";
@@ -43,6 +43,7 @@ export default function Signals() {
   const [busy, setBusy] = useState(false);
   const [alerts, setAlerts] = useState(() => typeof Notification !== "undefined" && Notification.permission === "granted");
   const seen = useRef(Number(store.get(SEEN_KEY) || 0));
+  const summary = usePoll<Summary>("/api/summary", 60_000);
 
   function forget() {
     store.set(TOKEN_KEY, null);
@@ -133,8 +134,8 @@ export default function Signals() {
     setAlerts((await Notification.requestPermission()) === "granted");
   }
 
-  const min = data?.minTokens ?? denied?.minTokens ?? 1_000_000;
-  const delay = data?.delayMin ?? 60;
+  const min = data?.minTokens ?? denied?.minTokens ?? summary.data?.signalMinTokens ?? 100_000;
+  const delay = data?.delayMin ?? summary.data?.delayMin ?? 60;
   return (
     <div className="wrap">
       <section className="section" style={{ marginTop: 36 }}>
