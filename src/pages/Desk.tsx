@@ -27,7 +27,7 @@ export default function Desk() {
         <div className="panel-head">
           <div>
             <h2 style={{ fontSize: 26 }}>{t("desk.title")}</h2>
-            {s?.mode === "paper" && <div className="notice"><PaperBadge /></div>}
+            <div className="notice"><PaperBadge /></div>
           </div>
           {s && <span className="muted mono" style={{ fontSize: 12 }}>{t("updated")} {ago(s.at, zh)}</span>}
         </div>

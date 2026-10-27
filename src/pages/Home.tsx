@@ -1,8 +1,29 @@
+import { useState } from "react";
 import { useI18n } from "../i18n";
 import { usePoll, type Market, type Summary, type Thought } from "../api";
 import { MarketsTable, PaperBadge, Panel, Stat, Thoughts } from "../components/common";
 import { pct, signedUsd, tone, usd } from "../format";
-import { ADDR, LINKS } from "../config";
+import { ADDR, CHAIN, LINKS } from "../config";
+
+function ContractAddress() {
+  const { t } = useI18n();
+  const [copied, setCopied] = useState(false);
+  const copy = () =>
+    navigator.clipboard
+      ?.writeText(ADDR.token)
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      })
+      .catch(() => {});
+  return (
+    <div className="ca">
+      <span>CA</span>
+      <a href={`${CHAIN.explorer}/token/${ADDR.token}`} target="_blank" rel="noreferrer">{ADDR.token}</a>
+      <button type="button" onClick={copy}>{copied ? t("ca.copied") : t("ca.copy")}</button>
+    </div>
+  );
+}
 
 export default function Home() {
   const { t } = useI18n();
@@ -23,10 +44,11 @@ export default function Home() {
           <p className="tagline">{t("hero.tagline")}</p>
           <p className="sub">{t("hero.sub")}</p>
           <div className="ctas">
-            <a className="btn primary" href={LINKS.buy} target="_blank" rel="noreferrer">{ADDR.token ? t("nav.buy") : t("nav.soon")}</a>
+            <a className="btn primary" href={LINKS.buy} target="_blank" rel="noreferrer">{t("nav.buy")}</a>
             <a className="btn" href="#/desk">{t("hero.cta.desk")}</a>
             <a className="btn" href="#/dividends">{t("hero.cta.div")}</a>
           </div>
+          <ContractAddress />
         </div>
         <Panel glow title={t("markets.title")} right={<span className="badge"><i />LIVE</span>}>
           {markets.data ? <MarketsTable markets={markets.data} limit={6} /> : <div className="empty">{markets.error ? t("offline") : t("loading")}</div>}
@@ -40,7 +62,7 @@ export default function Home() {
           <Stat k={t("stats.trades")} v={s ? s.trades : "—"} />
           <Stat k={t("stats.win")} v={s && s.winRate !== null ? `${(s.winRate * 100).toFixed(0)}%` : "—"} />
         </div>
-        {s?.mode === "paper" && <div className="notice"><PaperBadge /></div>}
+        <div className="notice"><PaperBadge /></div>
       </section>
 
       <section className="section">

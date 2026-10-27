@@ -3,7 +3,7 @@ import { LangProvider, useI18n } from "./i18n";
 import Home from "./pages/Home";
 import Desk from "./pages/Desk";
 import Dividends from "./pages/Dividends";
-import { ADDR, LINKS } from "./config";
+import { LINKS } from "./config";
 
 function useRoute() {
   const read = () => location.hash.replace(/^#\/?/, "").split("?")[0];
@@ -44,7 +44,7 @@ function Header({ route }: { route: string }) {
           <button className={lang === "en" ? "on" : ""} onClick={() => setLang("en")}>EN</button>
           <button className={lang === "zh" ? "on" : ""} onClick={() => setLang("zh")}>中文</button>
         </div>
-        <a className="btn primary" href={LINKS.buy} target="_blank" rel="noreferrer">{ADDR.token ? t("nav.buy") : t("nav.soon")}</a>
+        <a className="btn primary" href={LINKS.buy} target="_blank" rel="noreferrer">{t("nav.buy")}</a>
       </div>
     </header>
   );

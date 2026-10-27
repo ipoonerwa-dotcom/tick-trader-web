@@ -177,3 +177,10 @@ td.why { white-space: normal; color: #cfcfcf; min-width: 260px; }
 .alloc-since { margin-top: 10px; color: var(--muted); font-size: 12px; }
 .tag-index { margin-left: 8px; font-size: 10px; padding: 2px 6px; vertical-align: middle; }
 @media (max-width: 720px) { .alloc-grid { grid-template-columns: 1fr; } }
+
+.ca { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; margin-top: 18px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.ca span { color: var(--yellow); letter-spacing: 0.06em; }
+.ca a { color: var(--text); word-break: break-all; }
+.ca a:hover { color: var(--yellow); }
+.ca button { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 4px 10px; font: inherit; cursor: pointer; }
+.ca button:hover { color: var(--text); border-color: rgba(255, 210, 63, 0.5); }

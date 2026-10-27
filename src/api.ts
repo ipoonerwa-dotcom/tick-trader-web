@@ -138,21 +138,6 @@ export interface Thought {
   version?: number;
 }
 
-export interface DividendSummary {
-  epoch: number;
-  day: string;
-  root: string;
-  totals: Record<string, string>;
-  paidToday: Record<string, string>;
-  eligible: { account: string; avg: string }[];
-}
-
-export interface Claim {
-  token: string;
-  cumulative: string;
-  proof: string[];
-}
-
 /** Fetches `path` now and every `ms`; keeps the last good answer when a refresh fails. `null` path = idle. */
 export function usePoll<T>(path: string | null, ms = 15_000) {
   const [state, setState] = useState<{ data: T | null; error: string | null; loading: boolean }>({
