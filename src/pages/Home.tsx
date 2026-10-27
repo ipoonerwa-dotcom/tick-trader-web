@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useI18n } from "../i18n";
 import { usePoll, type DividendStats, type Market, type Summary, type Thought } from "../api";
 import { DividendNote, DividendStatsRow } from "../components/DividendStats";
+import { PickCard } from "../components/TodayPick";
 import { MarketsTable, PaperBadge, Panel, Stat, Thoughts } from "../components/common";
 import { pct, signedUsd, tone, usd } from "../format";
 import { ADDR, CHAIN, LINKS } from "../config";
@@ -64,6 +65,10 @@ export default function Home() {
         </div>
         <DividendStatsRow s={dividends.data} />
         <DividendNote s={dividends.data} error={dividends.error} />
+      </section>
+
+      <section className="section">
+        <PickCard />
       </section>
 
       <section className="section">

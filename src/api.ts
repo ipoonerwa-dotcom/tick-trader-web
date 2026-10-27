@@ -141,6 +141,16 @@ export interface Thought {
 }
 
 /** Fetches `path` now and every `ms`; keeps the last good answer when a refresh fails. `null` path = idle. */
+/** This morning's AI review and its pick, which holders can swap their WBNB dividends into. */
+export interface DailyReview {
+  id: string;
+  generatedAt: number;
+  model: string;
+  pick: { sym: string; token: `0x${string}`; decimals: number; pools: { quote: "USDT" | "WBNB"; fee: number; pool: string; costBps: number }[] };
+  text: { zh: { title: string; body: string; pickReason: string }; en: { title: string; body: string; pickReason: string } };
+  nextChecks: string[];
+}
+
 /** The holder-only, real-time view of the desk (the public pages show it delayMin late). */
 export interface Signals {
   at: number;

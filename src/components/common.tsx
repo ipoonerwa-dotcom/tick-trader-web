@@ -192,7 +192,7 @@ export function Thoughts({ items }: { items: Thought[] }) {
       {items.map((x) => (
         <div className="thought" key={x.t}>
           <b>{(!zh && x.titleEn) || x.title}{x.version ? ` · v${x.version}` : ""}</b>
-          <div className="meta">{ago(x.t, zh)}</div>
+          <div className="meta">{x.kind === "daily" && <span className="pill buy" style={{ marginRight: 8 }}>{t("thoughts.daily")}</span>}{ago(x.t, zh)}</div>
           <p>{(!zh && x.textEn) || x.text}</p>
         </div>
       ))}

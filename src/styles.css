@@ -145,7 +145,7 @@ td.why { white-space: normal; color: #cfcfcf; min-width: 260px; }
 .thought { border-left: 2px solid var(--yellow); padding: 2px 0 2px 12px; }
 .thought b { font-size: 15px; }
 .thought .meta { color: var(--muted); font-size: 12px; margin-top: 2px; font-family: var(--mono); }
-.thought p { margin: 6px 0 0; color: #d6d6d6; font-size: 14px; line-height: 1.6; }
+.thought p { margin: 6px 0 0; color: #d6d6d6; font-size: 14px; line-height: 1.6; white-space: pre-line; }
 
 /* dividends */
 .lookup { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -215,4 +215,10 @@ td.why { white-space: normal; color: #cfcfcf; min-width: 260px; }
   .lang, .xlink, .brand { flex-shrink: 0; }
   .lang button { white-space: nowrap; }
 }
+
+/* AI pick of the day */
+.pick { display: grid; gap: 6px; }
+.pick-sym { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.pick-sym b { font-family: var(--mono); font-size: 26px; color: var(--yellow); }
+.pick p { margin: 0; line-height: 1.65; }
 

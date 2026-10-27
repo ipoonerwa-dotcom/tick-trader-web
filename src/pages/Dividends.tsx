@@ -5,6 +5,7 @@ import { useI18n } from "../i18n";
 import { usePoll, type DividendStats, type DividendUser } from "../api";
 import { Panel } from "../components/common";
 import { DividendNote, DividendStatsRow, usdOf, wbnb } from "../components/DividendStats";
+import { PickSwap } from "../components/TodayPick";
 import { ADDR, API_BASE, CHAIN } from "../config";
 
 declare global {
@@ -130,6 +131,10 @@ export default function Dividends() {
       <section className="section">
         <DividendStatsRow s={stats.data} />
         <DividendNote s={stats.data} error={stats.error} />
+      </section>
+
+      <section className="section">
+        <PickSwap />
       </section>
 
       <section className="section">
