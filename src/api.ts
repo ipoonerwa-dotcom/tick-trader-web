@@ -3,6 +3,7 @@ import { API_BASE } from "./config";
 
 export interface Summary {
   mode: "paper" | "live";
+  delayMin?: number;
   startedAt: number;
   capitalUsd: number;
   equityUsd: number;
@@ -139,6 +140,65 @@ export interface Thought {
 }
 
 /** Fetches `path` now and every `ms`; keeps the last good answer when a refresh fails. `null` path = idle. */
+/** The holder-only, real-time view of the desk (the public pages show it delayMin late). */
+export interface Signals {
+  at: number;
+  holder: { address: string; balance: number };
+  minTokens: number;
+  delayMin: number;
+  strategyVersion: number;
+  orders: Order[];
+  positions: Position[];
+  allocation: Omit<Allocation, "stocks"> & { stocks: Omit<AllocStock, "series">[] };
+}
+
+export interface ReportText {
+  title: string;
+  summary: string;
+  sections: { heading: string; body: string }[];
+  tweet: string;
+}
+
+export interface ReportNumbers {
+  equityStart: number;
+  equityEnd: number;
+  pnlUsd: number;
+  pnlPct: number;
+  trades: number;
+  closes: number;
+  wins: number;
+  realizedUsd: number;
+  strategyVersion: number;
+  reviews: number;
+  adopted: number;
+  dividendsTotalWbnb: number | null;
+  dividendsWeekWbnb: number | null;
+  earningAddresses?: number | null;
+  holders?: number | null;
+  bnbUsd: number | null;
+}
+
+export interface ReportSummary {
+  id: string;
+  from: number;
+  to: number;
+  numbers: ReportNumbers;
+  title: { zh?: string; en?: string };
+  summary: { zh?: string; en?: string };
+}
+
+export interface Report {
+  id: string;
+  from: number;
+  to: number;
+  generatedAt: number;
+  model: string;
+  numbers: ReportNumbers;
+  equity: { t: number; eq: number }[];
+  trades: { t: number; sym: string; side: "buy" | "sell"; usd: number; px: number; why?: Why; reason?: string; pnlUsd: number | null }[];
+  text: { zh: ReportText; en: ReportText };
+}
+
 /** GANG's dividend vault for $TICK, indexed by the desk bot. The rate and APR are null until a full day of trading. */
 export interface DividendStats {
   updatedAt: number | null;

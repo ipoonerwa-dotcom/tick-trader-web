@@ -3,6 +3,8 @@ import { LangProvider, useI18n } from "./i18n";
 import Home from "./pages/Home";
 import Desk from "./pages/Desk";
 import Dividends from "./pages/Dividends";
+import Signals from "./pages/Signals";
+import Reports from "./pages/Reports";
 import { LINKS } from "./config";
 
 function useRoute() {
@@ -31,6 +33,8 @@ function Header({ route }: { route: string }) {
         <nav className="nav">
           <a className={route === "desk" ? "on" : ""} href="#/desk">{t("nav.desk")}</a>
           <a className={route === "dividends" ? "on" : ""} href="#/dividends">{t("nav.dividends")}</a>
+          <a className={route === "signals" ? "on" : ""} href="#/signals">{t("nav.signals")}</a>
+          <a className={route.startsWith("reports") ? "on" : ""} href="#/reports">{t("nav.reports")}</a>
         </nav>
         <div className="spacer" />
         {LINKS.x && (
@@ -70,7 +74,19 @@ function Shell() {
   return (
     <>
       <Header route={route} />
-      <main>{route === "desk" ? <Desk /> : route === "dividends" ? <Dividends /> : <Home />}</main>
+      <main>
+        {route === "desk" ? (
+          <Desk />
+        ) : route === "dividends" ? (
+          <Dividends />
+        ) : route === "signals" ? (
+          <Signals />
+        ) : route.startsWith("reports") ? (
+          <Reports id={route.split("/")[1] || undefined} />
+        ) : (
+          <Home />
+        )}
+      </main>
       <Footer />
     </>
   );

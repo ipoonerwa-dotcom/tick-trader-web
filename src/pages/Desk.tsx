@@ -28,6 +28,11 @@ export default function Desk() {
           <div>
             <h2 style={{ fontSize: 26 }}>{t("desk.title")}</h2>
             <div className="notice"><PaperBadge /></div>
+            {!!s?.delayMin && (
+              <div className="notice">
+                {t("desk.delayed").replace("{delay}", String(s.delayMin))} <a href="#/signals">{t("nav.signals")} →</a>
+              </div>
+            )}
           </div>
           {s && <span className="muted mono" style={{ fontSize: 12 }}>{t("updated")} {ago(s.at, zh)}</span>}
         </div>

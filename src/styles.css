@@ -185,3 +185,34 @@ td.why { white-space: normal; color: #cfcfcf; min-width: 260px; }
 .ca button { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 4px 10px; font: inherit; cursor: pointer; }
 .ca button:hover { color: var(--text); border-color: rgba(255, 210, 63, 0.5); }
 .kv div small { display: block; margin-top: 2px; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+/* AI signals */
+.sig-bar { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+.sig-bar .spacer, .sig-head .spacer { flex: 1; }
+.sig-list { display: grid; gap: 10px; }
+.sig-item { padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px; background: rgba(0, 0, 0, 0.25); }
+.sig-head { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; }
+.sig-why { margin-top: 6px; color: var(--muted); font-size: 14px; line-height: 1.5; }
+.pill.off { border: 1px solid var(--border); color: var(--muted); }
+
+/* AI weekly */
+.rep-list { display: grid; gap: 14px; }
+.rep-card { display: block; padding: 18px; border: 1px solid var(--border); border-radius: 14px; background: var(--panel); color: var(--text); }
+.rep-card:hover { border-color: rgba(255, 210, 63, 0.5); }
+.rep-card h3 { margin: 6px 0 8px; font-size: 18px; }
+.rep-card p { margin: 0 0 12px; line-height: 1.6; }
+.rep-nums { display: flex; flex-wrap: wrap; gap: 8px 16px; font-family: var(--mono); font-size: 13px; align-items: center; }
+.rep-nums b { margin-left: auto; color: var(--yellow); font-family: inherit; }
+.rep-body h3 { font-size: 16px; margin: 18px 0 6px; }
+.rep-body > div:first-child h3 { margin-top: 0; }
+.rep-body p { margin: 0 0 10px; line-height: 1.75; color: var(--text); max-width: 820px; }
+.rep-tweet { white-space: pre-wrap; line-height: 1.7; font-size: 15px; }
+
+/* four nav items: let them scroll sideways on phones instead of pushing the header wider */
+@media (max-width: 720px) {
+  .nav { min-width: 0; flex: 1 1 auto; overflow-x: auto; scrollbar-width: none; }
+  .nav::-webkit-scrollbar { display: none; }
+  .lang, .xlink, .brand { flex-shrink: 0; }
+  .lang button { white-space: nowrap; }
+}
+
