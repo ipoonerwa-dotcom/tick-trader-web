@@ -98,7 +98,7 @@ button { font: inherit; }
 .stat { background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 16px 18px; min-width: 0; }
 .stat .k { color: var(--muted); font-size: 13px; }
 .stat .v { font-family: var(--mono); font-size: 24px; font-weight: 600; margin-top: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.stat .v small { display: block; font-size: 13px; font-weight: 400; margin-top: 2px; opacity: 0.85; }
+.stat .v small { display: block; font-size: 13px; font-weight: 400; margin-top: 2px; opacity: 0.85; white-space: normal; }
 @media (max-width: 720px) { .stats { grid-template-columns: repeat(2, 1fr); } .stat .v { font-size: 19px; } }
 
 .up { color: var(--up); }
@@ -184,3 +184,4 @@ td.why { white-space: normal; color: #cfcfcf; min-width: 260px; }
 .ca a:hover { color: var(--yellow); }
 .ca button { background: transparent; border: 1px solid var(--border); color: var(--muted); border-radius: 8px; padding: 4px 10px; font: inherit; cursor: pointer; }
 .ca button:hover { color: var(--text); border-color: rgba(255, 210, 63, 0.5); }
+.kv div small { display: block; margin-top: 2px; font-family: var(--mono); font-size: 12px; color: var(--muted); }

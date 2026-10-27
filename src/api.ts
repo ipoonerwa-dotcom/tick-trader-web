@@ -139,6 +139,35 @@ export interface Thought {
 }
 
 /** Fetches `path` now and every `ms`; keeps the last good answer when a refresh fails. `null` path = idle. */
+/** GANG's dividend vault for $TICK, indexed by the desk bot. The rate and APR are null until a full day of trading. */
+export interface DividendStats {
+  updatedAt: number | null;
+  lastError?: string | null;
+  reconciled?: boolean;
+  block?: number;
+  totalWbnb?: number;
+  claimedWbnb?: number;
+  windowHours?: number;
+  windowWbnb?: number;
+  wbnbPerDay?: number | null;
+  aprPct?: number | null;
+  perMillionPerDay?: number | null;
+  holders?: number;
+  totalShares?: number;
+  priceBnb?: number | null;
+  mcapBnb?: number | null;
+  bnbUsd?: number | null;
+  minHolding?: number;
+}
+
+export interface DividendUser {
+  address: string;
+  share: number;
+  claimedWbnb: number;
+  estPerDay: number | null;
+  updatedAt: number | null;
+}
+
 export function usePoll<T>(path: string | null, ms = 15_000) {
   const [state, setState] = useState<{ data: T | null; error: string | null; loading: boolean }>({
     data: null,

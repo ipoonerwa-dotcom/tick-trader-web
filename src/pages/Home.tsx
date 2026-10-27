@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useI18n } from "../i18n";
-import { usePoll, type Market, type Summary, type Thought } from "../api";
+import { usePoll, type DividendStats, type Market, type Summary, type Thought } from "../api";
+import { DividendNote, DividendStatsRow } from "../components/DividendStats";
 import { MarketsTable, PaperBadge, Panel, Stat, Thoughts } from "../components/common";
 import { pct, signedUsd, tone, usd } from "../format";
 import { ADDR, CHAIN, LINKS } from "../config";
@@ -30,6 +31,7 @@ export default function Home() {
   const summary = usePoll<Summary>("/api/summary", 15_000);
   const markets = usePoll<Market[]>("/api/markets", 10_000);
   const thoughts = usePoll<Thought[]>("/api/thoughts?limit=3", 60_000);
+  const dividends = usePoll<DividendStats>("/api/dividends/stats", 30_000);
   const s = summary.data;
 
   return (
@@ -53,6 +55,15 @@ export default function Home() {
         <Panel glow title={t("markets.title")} right={<span className="badge"><i />LIVE</span>}>
           {markets.data ? <MarketsTable markets={markets.data} limit={6} /> : <div className="empty">{markets.error ? t("offline") : t("loading")}</div>}
         </Panel>
+      </section>
+
+      <section className="section">
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, margin: "0 0 14px" }}>
+          <h2 style={{ fontSize: 20, margin: 0 }}>{t("home.div.title")}</h2>
+          <a className="muted" href="#/dividends">{t("home.div.more")}</a>
+        </div>
+        <DividendStatsRow s={dividends.data} />
+        <DividendNote s={dividends.data} error={dividends.error} />
       </section>
 
       <section className="section">
