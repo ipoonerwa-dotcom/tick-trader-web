@@ -109,7 +109,7 @@ button { font: inherit; }
 .notice { font-size: 13px; color: var(--muted); margin-top: 10px; }
 
 /* flow */
-.flow { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.flow { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
 .flow .step { position: relative; background: var(--panel); border: 1px solid var(--border); border-radius: 14px; padding: 18px; }
 .flow .step b { display: block; font-size: 16px; margin-bottom: 8px; }
 .flow .step b span { font-family: var(--pixel); font-size: 11px; color: var(--yellow); margin-right: 8px; }

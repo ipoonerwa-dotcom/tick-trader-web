@@ -46,7 +46,7 @@ export default function Home() {
       <section className="section">
         <h2 style={{ fontSize: 20, margin: "0 0 14px" }}>{t("flow.title")}</h2>
         <div className="flow">
-          {[1, 2, 3].map((n) => (
+          {[1, 2].map((n) => (
             <div className="step" key={n}>
               <b><span>0{n}</span>{t(`flow.${n}.t` as "flow.1.t")}</b>
               <p>{t(`flow.${n}.d` as "flow.1.d")}</p>
