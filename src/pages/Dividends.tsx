@@ -88,7 +88,7 @@ export default function Dividends() {
         <Panel title={t("div.rules")}>
           <div className="kv">
             <div><span>{t("div.k.tax")}</span><b>1% / 1%</b></div>
-            <div><span>{t("div.k.share")}</span><b>100%</b></div>
+            <div><span>{t("div.k.share")}</span><b>0%</b></div>
             <div><span>{t("div.k.min")}</span><b>{t("div.v.min")}</b></div>
             <div><span>{t("div.k.paid")}</span><b>WBNB</b></div>
             <div>
