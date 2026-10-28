@@ -239,6 +239,74 @@ export interface DividendUser {
   updatedAt: number | null;
 }
 
+export interface AgentSummary {
+  id: string;
+  name: string;
+  nameEn?: string;
+  tagline: string;
+  taglineEn?: string;
+  author: string;
+  market: "trench" | "stocks";
+  startedAt: number;
+  capitalUsd: number;
+  sizeUsd?: number;
+  equityUsd: number;
+  pnlUsd: number;
+  pnlPct: number; // percent
+  trades: number;
+  winRate: number | null; // 0..1
+  open: number;
+  lastTradeAt: number | null;
+  spark?: number[];
+  link?: string;
+}
+
+export interface AgentList {
+  at: number;
+  agents: AgentSummary[];
+  trench: { updatedAt: number; live: boolean; lastHeadAt: number | null } | null;
+}
+
+export interface AgentTrade {
+  token: string;
+  symbol: string;
+  openedAt: number;
+  closedAt: number;
+  cost: number;
+  pnl: number;
+  pnlPct: number; // percent
+  why: string;
+  whyEn?: string;
+  exitWhy: string;
+  exitWhyEn?: string;
+  narrative: string;
+  stage: string;
+  mcap: number | null;
+}
+
+export interface AgentPosition {
+  token: string;
+  symbol: string;
+  openedAt: number;
+  cost: number;
+  pnlUsd: number;
+  why: string;
+  whyEn?: string;
+  narrative: string;
+  stage: string;
+  mcap: number | null;
+  tpDone: boolean;
+}
+
+export interface AgentDetail extends AgentSummary {
+  rules: string[];
+  rulesEn?: string[];
+  positions?: AgentPosition[];
+  history?: AgentTrade[];
+  equity?: { t: number; v: number }[];
+  skips?: Record<string, number>;
+}
+
 export function usePoll<T>(path: string | null, ms = 15_000) {
   const [state, setState] = useState<{ data: T | null; error: string | null; loading: boolean }>({
     data: null,

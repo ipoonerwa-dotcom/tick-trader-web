@@ -5,6 +5,7 @@ import Desk from "./pages/Desk";
 import Dividends from "./pages/Dividends";
 import Signals from "./pages/Signals";
 import Reports from "./pages/Reports";
+import Agents from "./pages/Agents";
 import { LINKS } from "./config";
 
 function useRoute() {
@@ -31,6 +32,7 @@ function Header({ route }: { route: string }) {
           <b><span>TICK</span><br />TRADER</b>
         </a>
         <nav className="nav">
+          <a className={route.startsWith("agents") ? "on" : ""} href="#/agents">{t("nav.agents")}</a>
           <a className={route === "desk" ? "on" : ""} href="#/desk">{t("nav.desk")}</a>
           <a className={route === "dividends" ? "on" : ""} href="#/dividends">{t("nav.dividends")}</a>
           <a className={route === "signals" ? "on" : ""} href="#/signals">{t("nav.signals")}</a>
@@ -83,6 +85,8 @@ function Shell() {
           <Signals />
         ) : route.startsWith("reports") ? (
           <Reports id={route.split("/")[1] || undefined} />
+        ) : route.startsWith("agents") ? (
+          <Agents id={route.split("/")[1] || undefined} />
         ) : (
           <Home />
         )}
