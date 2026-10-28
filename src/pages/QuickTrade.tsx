@@ -41,7 +41,7 @@ export default function QuickTrade() {
         <img className="qt-shot" src="/quicktrade-panel.jpg" alt={t("qt.shot.alt")} width={1000} height={668} decoding="async" />
       </section>
 
-      <section className="section qt-features">
+      <section className="section feature-grid">
         {[1, 2, 3].map((i) => (
           <div className="panel" key={i}>
             <h3>{t(`qt.f${i}.h` as Key)}</h3>

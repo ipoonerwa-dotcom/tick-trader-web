@@ -1,7 +1,7 @@
 import { useI18n, type Key } from "../i18n";
 
 /** A coming-soon page for a feature on the roadmap: what it will do, in a few lines. */
-export default function Soon({ id }: { id: "tasks" | "studio" | "mirror" }) {
+export default function Soon({ id }: { id: "studio" | "mirror" }) {
   const { t } = useI18n();
   const points = [1, 2, 3].map((i) => `soon.${id}.${i}` as Key);
   return (

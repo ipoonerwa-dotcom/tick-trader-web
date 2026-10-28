@@ -7,7 +7,7 @@ import { MarketsTable, PaperBadge, Panel, Stat, Thoughts } from "../components/c
 import { pct, signedUsd, tone, usd } from "../format";
 import { ADDR, CHAIN, LINKS } from "../config";
 
-function ContractAddress() {
+export function ContractAddress() {
   const { t } = useI18n();
   const [copied, setCopied] = useState(false);
   const copy = () =>

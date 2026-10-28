@@ -11,6 +11,7 @@ import Mine from "./pages/Mine";
 import Admin from "./pages/Admin";
 import Soon from "./pages/Soon";
 import QuickTrade from "./pages/QuickTrade";
+import TaskHome from "./pages/TaskHome";
 import { LINKS } from "./config";
 
 function useRoute() {
@@ -31,8 +32,11 @@ type Item = { href: string; label: Key; soon?: boolean; match: (r: string) => bo
 type Group = { label: Key; items: Item[] };
 
 const is = (name: string) => (r: string) => r === name || r.startsWith(name + "/");
+/** The task market is the home page; #/tasks still opens it. */
+const isHome = (r: string) => r === "" || is("tasks")(r);
 /** The menu: what the site offers, grouped by what a visitor came to do. The review desk (#/admin) is not listed. */
 const NAV: Group[] = [
+  { label: "nav.g.tasks", items: [{ href: "#/", label: "nav.tasks", soon: true, match: isHome }] },
   {
     label: "nav.g.store",
     items: [
@@ -42,7 +46,6 @@ const NAV: Group[] = [
     ],
   },
   { label: "nav.g.quick", items: [{ href: "#/quicktrade", label: "nav.g.quick", match: is("quicktrade") }] },
-  { label: "nav.g.tasks", items: [{ href: "#/tasks", label: "nav.tasks", soon: true, match: is("tasks") }] },
   {
     label: "nav.g.create",
     items: [
@@ -50,15 +53,16 @@ const NAV: Group[] = [
       { href: "#/mirror", label: "nav.mirror", soon: true, match: is("mirror") },
     ],
   },
+  { label: "nav.g.tick", items: [{ href: "#/dividends", label: "nav.dividends", match: is("dividends") }] },
   {
     label: "nav.g.desk",
     items: [
+      { href: "#/quant", label: "nav.quant", match: is("quant") },
       { href: "#/desk", label: "nav.desk", match: is("desk") },
       { href: "#/signals", label: "nav.signals", match: is("signals") },
       { href: "#/reports", label: "nav.reports", match: is("reports") },
     ],
   },
-  { label: "nav.g.tick", items: [{ href: "#/dividends", label: "nav.dividends", match: is("dividends") }] },
 ];
 
 function Header({ route }: { route: string }) {
@@ -172,12 +176,13 @@ function Page({ route }: { route: string }) {
       return <Admin />;
     case "quicktrade":
       return <QuickTrade />;
-    case "tasks":
+    case "quant":
+      return <Home />;
     case "studio":
     case "mirror":
       return <Soon id={head} />;
     default:
-      return <Home />;
+      return <TaskHome />;
   }
 }
 
