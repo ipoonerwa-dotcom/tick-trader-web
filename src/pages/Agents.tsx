@@ -35,6 +35,10 @@ const SKIP: Record<string, [string, string]> = {
   holders: ["持币人太少", "Too few holders"],
   noleader: ["还没有车头", "No leader in yet"],
   age: ["币龄太老", "Too old"],
+  young: ["上线时间不够", "Too new"],
+  launchpad: ["平台不做", "Platform not traded"],
+  serialdev: ["狗庄连环发币", "Serial-launcher dev"],
+  growth: ["持币人没在涨", "Holders not growing"],
 };
 
 const mcapText = (v: number | null | undefined, zh: boolean) =>
