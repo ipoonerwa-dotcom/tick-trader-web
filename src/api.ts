@@ -246,7 +246,9 @@ export interface AgentSummary {
   tagline: string;
   taglineEn?: string;
   author: string;
-  market: "trench" | "stocks";
+  market: "trench" | "stocks" | "skill";
+  category?: string;
+  categoryEn?: string;
   startedAt: number;
   capitalUsd: number;
   sizeUsd?: number;
@@ -299,6 +301,12 @@ export interface AgentPosition {
 }
 
 export interface AgentDetail extends AgentSummary {
+  subId?: string;
+  pkg?: { name: string; size: number; sha256: string; files: { name: string; size: number }[] } | null;
+  description?: string;
+  skillMd?: string;
+  repo?: string | null;
+  contact?: string | null;
   rules: string[];
   rulesEn?: string[];
   positions?: AgentPosition[];

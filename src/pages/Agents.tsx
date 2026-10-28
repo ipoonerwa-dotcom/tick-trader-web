@@ -3,17 +3,8 @@ import { useI18n } from "../i18n";
 import { usePoll, type AgentDetail, type AgentList, type AgentSummary } from "../api";
 import { EquityChart, PaperBadge, Panel, Stat } from "../components/common";
 import { ago, clock, pct, signedUsd, tone, usd } from "../format";
-
-const NARRATIVE_EN: Record<string, string> = {
-  币安系: "Binance",
-  币股: "Stock token",
-  韩国梗: "Korean meme",
-  名人热点: "Celebs & news",
-  动物卡通: "Animals",
-  项目平台: "Project",
-  中文梗: "Chinese meme",
-  其他: "Other",
-};
+import { CATEGORY_EN, NARRATIVE_EN } from "../labels";
+import { PackageBrowser } from "../components/PackageBrowser";
 const STAGE: Record<string, [string, string]> = {
   outer: ["外盘", "Graduated"],
   inner_late: ["内盘后半", "Late curve"],
@@ -69,7 +60,97 @@ function Spark({ values, base }: { values: number[]; base: number }) {
 
 function MarketChip({ m }: { m: AgentSummary["market"] }) {
   const { t } = useI18n();
-  return <span className={"mk " + m}>{m === "trench" ? t("ag.trench") : t("ag.stocks")}</span>;
+  return <span className={"mk " + m}>{m === "trench" ? t("ag.trench") : m === "skill" ? t("ag.skill") : t("ag.stocks")}</span>;
+}
+
+function SkillCard({ a }: { a: AgentSummary }) {
+  const { t, lang } = useI18n();
+  const zh = lang === "zh";
+  return (
+    <a className="agent-card" href={`#/agents/${a.id}`}>
+      <div className="agent-top">
+        <MarketChip m="skill" />
+        <span className="muted">{zh ? a.category : a.categoryEn || a.category}</span>
+      </div>
+      <h3>{a.name}</h3>
+      <p className="muted">{a.tagline}</p>
+      <div className="agent-foot muted">
+        <span className="mono">{a.author}</span>
+        <span className="go">{t("ag.viewSkill")}</span>
+      </div>
+    </a>
+  );
+}
+
+function SkillPage({ d }: { d: AgentDetail }) {
+  const { t, lang } = useI18n();
+  const zh = lang === "zh";
+  const [copied, setCopied] = useState(false);
+  const copy = () => {
+    navigator.clipboard
+      .writeText(d.skillMd ?? "")
+      .then(() => {
+        setCopied(true);
+        setTimeout(() => setCopied(false), 1500);
+      })
+      .catch(() => {});
+  };
+  return (
+    <div className="wrap">
+      <section className="section" style={{ marginTop: 28 }}>
+        <a className="muted back" href="#/agents">
+          {t("ag.back")}
+        </a>
+        <div style={{ marginTop: 14 }}>
+          <MarketChip m="skill" /> <span className="muted small">{zh ? d.category : CATEGORY_EN[d.category ?? ""] ?? d.category}</span>
+          <h2 style={{ fontSize: 28, margin: "10px 0 6px" }}>{d.name}</h2>
+          <p className="muted lead">{d.tagline}</p>
+          <p className="muted small">
+            {t("sk.by")} <span className="mono">{d.author}</span> · {t("sk.listed")} {ago(d.startedAt, zh)}
+          </p>
+        </div>
+      </section>
+      <section className="section">
+        <Panel title={t("sk.about")}>
+          <p className="pre">{d.description}</p>
+          {(d.repo || d.contact) && (
+            <div className="row-gap" style={{ marginTop: 14 }}>
+              {d.repo && (
+                <a className="btn" href={d.repo} target="_blank" rel="noreferrer noopener">
+                  {t("sk.repo")} ↗
+                </a>
+              )}
+              {d.contact && (
+                <span className="muted small">
+                  {t("sk.contact")} {d.contact}
+                </span>
+              )}
+            </div>
+          )}
+        </Panel>
+      </section>
+      {d.pkg && d.subId && (
+        <section className="section">
+          <Panel title={t("pkg.title")} sub={t("pkg.warn")}>
+            <PackageBrowser subId={d.subId} pkg={d.pkg} />
+          </Panel>
+        </section>
+      )}
+      <section className="section">
+        <Panel
+          title="SKILL.md"
+          right={
+            <button className="btn" onClick={copy}>
+              {copied ? t("ca.copied") : t("ca.copy")}
+            </button>
+          }
+        >
+          <pre className="code">{d.skillMd}</pre>
+        </Panel>
+        <p className="muted fine">{t("sk.reviewed")}</p>
+      </section>
+    </div>
+  );
 }
 
 const nameOf = (a: AgentSummary, zh: boolean) => (zh ? a.name : a.nameEn || a.name);
@@ -80,6 +161,7 @@ const winText = (a: AgentSummary) => (a.winRate === null ? "—" : `${Math.round
 function AgentCard({ a }: { a: AgentSummary }) {
   const { t, lang } = useI18n();
   const zh = lang === "zh";
+  if (a.market === "skill") return <SkillCard a={a} />;
   return (
     <a className="agent-card" href={`#/agents/${a.id}`}>
       <div className="agent-top">
@@ -123,7 +205,7 @@ function AgentCard({ a }: { a: AgentSummary }) {
 
 function Store() {
   const { t } = useI18n();
-  const [tab, setTab] = useState<"all" | "trench" | "stocks">("all");
+  const [tab, setTab] = useState<"all" | "trench" | "stocks" | "skill">("all");
   const list = usePoll<AgentList>("/api/agents", 15_000);
   const agents = (list.data?.agents ?? []).filter((a) => tab === "all" || a.market === tab);
   return (
@@ -137,12 +219,17 @@ function Store() {
               <PaperBadge />
             </div>
           </div>
-          <div className="ranges">
-            {(["all", "trench", "stocks"] as const).map((k) => (
-              <button key={k} className={k === tab ? "on" : ""} onClick={() => setTab(k)}>
-                {t(`ag.${k}` as "ag.all")}
-              </button>
-            ))}
+          <div className="store-tools">
+            <div className="ranges">
+              {(["all", "trench", "stocks", "skill"] as const).map((k) => (
+                <button key={k} className={k === tab ? "on" : ""} onClick={() => setTab(k)}>
+                  {t(`ag.${k}` as "ag.all")}
+                </button>
+              ))}
+            </div>
+            <a className="btn primary small-btn" href="#/publish">
+              {t("ag.publish")}
+            </a>
           </div>
         </div>
         {list.data?.trench && !list.data.trench.live && <div className="notice">{t("ag.stale")}</div>}
@@ -156,13 +243,13 @@ function Store() {
       <section className="section">
         <div className="agents-grid">
           {(["studio", "mirror"] as const).map((k) => (
-            <div key={k} className="agent-card soon">
+            <a key={k} className="agent-card soon" href={`#/${k}`}>
               <div className="agent-top">
                 <span className="mk soon">{t("ag.soon")}</span>
               </div>
               <h3>{t(`ag.soon.${k}` as "ag.soon.studio")}</h3>
               <p className="muted">{t(`ag.soon.${k}.d` as "ag.soon.studio.d")}</p>
-            </div>
+            </a>
           ))}
         </div>
         <p className="muted fine">{t("ag.fills")}</p>
@@ -184,6 +271,7 @@ function AgentPage({ id }: { id: string }) {
         </div>
       </div>
     );
+  if (d.market === "skill") return <SkillPage d={d} />;
   const rules = (zh ? d.rules : d.rulesEn) ?? d.rules;
   const points = (d.equity ?? []).map((e) => ({ t: e.t, eq: e.v, cash: 0, pos: 0 }));
   const narrative = (n: string) => (zh ? n : NARRATIVE_EN[n] ?? n);

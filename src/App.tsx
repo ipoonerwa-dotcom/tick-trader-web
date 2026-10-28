@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
-import { LangProvider, useI18n } from "./i18n";
+import { LangProvider, useI18n, type Key } from "./i18n";
 import Home from "./pages/Home";
 import Desk from "./pages/Desk";
 import Dividends from "./pages/Dividends";
 import Signals from "./pages/Signals";
 import Reports from "./pages/Reports";
 import Agents from "./pages/Agents";
+import Publish from "./pages/Publish";
+import Mine from "./pages/Mine";
+import Admin from "./pages/Admin";
+import Soon from "./pages/Soon";
+import QuickTrade from "./pages/QuickTrade";
 import { LINKS } from "./config";
 
 function useRoute() {
@@ -22,8 +27,45 @@ function useRoute() {
   return route;
 }
 
+type Item = { href: string; label: Key; soon?: boolean; match: (r: string) => boolean };
+type Group = { label: Key; items: Item[] };
+
+const is = (name: string) => (r: string) => r === name || r.startsWith(name + "/");
+/** The menu: what the site offers, grouped by what a visitor came to do. The review desk (#/admin) is not listed. */
+const NAV: Group[] = [
+  {
+    label: "nav.g.store",
+    items: [
+      { href: "#/agents", label: "nav.agents", match: is("agents") },
+      { href: "#/publish", label: "nav.publish", match: is("publish") },
+      { href: "#/me", label: "nav.mine", match: is("me") },
+    ],
+  },
+  { label: "nav.g.quick", items: [{ href: "#/quicktrade", label: "nav.g.quick", match: is("quicktrade") }] },
+  { label: "nav.g.tasks", items: [{ href: "#/tasks", label: "nav.tasks", soon: true, match: is("tasks") }] },
+  {
+    label: "nav.g.create",
+    items: [
+      { href: "#/studio", label: "nav.studio", soon: true, match: is("studio") },
+      { href: "#/mirror", label: "nav.mirror", soon: true, match: is("mirror") },
+    ],
+  },
+  {
+    label: "nav.g.desk",
+    items: [
+      { href: "#/desk", label: "nav.desk", match: is("desk") },
+      { href: "#/signals", label: "nav.signals", match: is("signals") },
+      { href: "#/reports", label: "nav.reports", match: is("reports") },
+    ],
+  },
+  { label: "nav.g.tick", items: [{ href: "#/dividends", label: "nav.dividends", match: is("dividends") }] },
+];
+
 function Header({ route }: { route: string }) {
   const { t, lang, setLang } = useI18n();
+  const [open, setOpen] = useState(false);
+  useEffect(() => setOpen(false), [route]);
+  const active = (g: Group) => g.items.some((i) => i.match(route));
   return (
     <header className="header">
       <div className="wrap">
@@ -31,12 +73,29 @@ function Header({ route }: { route: string }) {
           <img src="/logo.svg" alt="" />
           <b><span>TICK</span><br />TRADER</b>
         </a>
-        <nav className="nav">
-          <a className={route.startsWith("agents") ? "on" : ""} href="#/agents">{t("nav.agents")}</a>
-          <a className={route === "desk" ? "on" : ""} href="#/desk">{t("nav.desk")}</a>
-          <a className={route === "dividends" ? "on" : ""} href="#/dividends">{t("nav.dividends")}</a>
-          <a className={route === "signals" ? "on" : ""} href="#/signals">{t("nav.signals")}</a>
-          <a className={route.startsWith("reports") ? "on" : ""} href="#/reports">{t("nav.reports")}</a>
+        <nav className="nav" aria-label={t("nav.menu")}>
+          {NAV.map((g) =>
+            g.items.length === 1 ? (
+              <a key={g.label} className={active(g) ? "on" : ""} href={g.items[0].href}>
+                {t(g.label)}
+                {g.items[0].soon && <i className="soon-dot" aria-hidden="true" />}
+              </a>
+            ) : (
+              <div key={g.label} className={"nav-group" + (active(g) ? " on" : "")}>
+                <button type="button" className={active(g) ? "on" : ""} aria-haspopup="true">
+                  {t(g.label)} <span className="caret" aria-hidden="true">▾</span>
+                </button>
+                <div className="nav-drop">
+                  {g.items.map((i) => (
+                    <a key={i.href} className={i.match(route) ? "on" : ""} href={i.href}>
+                      {t(i.label)}
+                      {i.soon && <span className="soon-tag">{t("ag.soon")}</span>}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ),
+          )}
         </nav>
         <div className="spacer" />
         {LINKS.x && (
@@ -51,7 +110,28 @@ function Header({ route }: { route: string }) {
           <button className={lang === "zh" ? "on" : ""} onClick={() => setLang("zh")}>中文</button>
         </div>
         <a className="btn primary" href={LINKS.buy} target="_blank" rel="noreferrer">{t("nav.buy")}</a>
+        <button type="button" className="menu-btn" aria-expanded={open} aria-controls="mobile-menu" onClick={() => setOpen((o) => !o)}>
+          {open ? t("nav.close") : t("nav.menu")}
+        </button>
       </div>
+      {open && (
+        <div className="mobile-menu" id="mobile-menu">
+          <div className="wrap">
+            {NAV.map((g) => (
+              <div key={g.label} className="mm-group">
+                <div className="mm-h">{t(g.label)}</div>
+                {g.items.map((i) => (
+                  <a key={i.href} className={i.match(route) ? "on" : ""} href={i.href}>
+                    {t(i.label)}
+                    {i.soon && <span className="soon-tag">{t("ag.soon")}</span>}
+                  </a>
+                ))}
+              </div>
+            ))}
+            <a className="btn primary mm-buy" href={LINKS.buy} target="_blank" rel="noreferrer">{t("nav.buy")}</a>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
@@ -71,25 +151,43 @@ function Footer() {
   );
 }
 
+function Page({ route }: { route: string }) {
+  const [head, sub] = route.split("/");
+  switch (head) {
+    case "desk":
+      return <Desk />;
+    case "dividends":
+      return <Dividends />;
+    case "signals":
+      return <Signals />;
+    case "reports":
+      return <Reports id={sub || undefined} />;
+    case "agents":
+      return <Agents id={sub || undefined} />;
+    case "publish":
+      return <Publish />;
+    case "me":
+      return <Mine />;
+    case "admin":
+      return <Admin />;
+    case "quicktrade":
+      return <QuickTrade />;
+    case "tasks":
+    case "studio":
+    case "mirror":
+      return <Soon id={head} />;
+    default:
+      return <Home />;
+  }
+}
+
 function Shell() {
   const route = useRoute();
   return (
     <>
       <Header route={route} />
       <main>
-        {route === "desk" ? (
-          <Desk />
-        ) : route === "dividends" ? (
-          <Dividends />
-        ) : route === "signals" ? (
-          <Signals />
-        ) : route.startsWith("reports") ? (
-          <Reports id={route.split("/")[1] || undefined} />
-        ) : route.startsWith("agents") ? (
-          <Agents id={route.split("/")[1] || undefined} />
-        ) : (
-          <Home />
-        )}
+        <Page route={route} />
       </main>
       <Footer />
     </>
